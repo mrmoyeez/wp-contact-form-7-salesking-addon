@@ -1,14 +1,10 @@
 <?php
 class SkRest {
-
     private $options = null;
-
     private $apis = array();
-
     private $apiStates = array();
-
-    private $systemMessage = null;
-
+    
+    
     /**
      * Inject the options
      * @return null
@@ -16,6 +12,7 @@ class SkRest {
     public function setOptions($input){
         $this->options = $input;
     }
+   
    
     /**
      * validate the options
@@ -34,7 +31,8 @@ class SkRest {
         }
         return $input;
     }
-
+    
+    
     /**
      * set up Salesking PHP library
      * @param $sk_url 
@@ -50,33 +48,25 @@ class SkRest {
 
         // create a unique instance for every credential combination
         $hash = md5($sk_url.$sk_username.$sk_password);
-
         if (!array_key_exists($hash, $this->apis)) {
-            // make sure that curl is available
-            
             // make sure that curl is available
             if (!in_array('curl', get_loaded_extensions())) {
                 echo "curl missing";
                 return false;
             }
-
             require_once dirname(__FILE__).'/lib/salesking/salesking.php';
-
             // set up object
             $config = array(
                 "sk_url" => $sk_url,
                 "user" => $sk_username,
                 "password" => $sk_password
             );
-
             $this->apis[$hash] = new Salesking($config);
         }
-
         return $this->apis[$hash];
-
-
     }
-
+    
+    
     /**
      *
      * fetch current api status
@@ -90,7 +80,6 @@ class SkRest {
         $sk_url = ($sk_url == null) ? $this->options['sk_url'] : $sk_url;
         $sk_username = ($sk_username == null) ? $this->options['sk_username'] : $sk_username;
         $sk_password = ($sk_password == null) ? $this->options['sk_password'] : $sk_password;
-
         // create a unique instance for every credential combination
         $hash = md5($sk_url.$sk_username.$sk_password);
         // get new status only
@@ -146,6 +135,12 @@ class SkRest {
         return $this->apiStates[$hash];
     }
     
+    
+    /**
+     * does the transfer
+     * @param $form_data array
+     * @return bool*
+    */
     public function send_data($form_data){
         $ok = false;
         $contact = $this->getApi()->getObject('contact');

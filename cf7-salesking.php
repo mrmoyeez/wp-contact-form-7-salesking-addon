@@ -33,7 +33,7 @@ function activationHook() {
 // contact form is present and active
 // lets do our stuff
 
-define( 'WPCF7_SK_VERSION', '0.02' );
+define( 'WPCF7_SK_VERSION', '0.03' );
 
 if ( ! defined( 'WPCF7_SK_PLUGIN_BASENAME' ) )
     define( 'WPCF7_SK_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
@@ -109,8 +109,27 @@ function show_sk_metabox($cf){
     do_meta_boxes( 'cfseven', 'cf7_sk', $cf );
 }
 
+function is_no_user_or_pw_or_subdomain($cf7_sk){
+    // some hacky marker to determine if we initialize the form first time
+    $ok = false;
+    if (empty($cf7_sk['api-username']) or (
+        empty($cf7_sk['api-userpw']) or (
+        empty($cf7_sk['subdomain']))))
+        {
+        $ok = true;
+    }
+    return $ok;
+
+}
+
+
 function set_salesking_defaults_if_empty($cf7_sk){
     // api defaults
+    if (is_no_user_or_pw_or_subdomain($cf7_sk) == false){
+        // if there is something set, do nothing
+        return $cf7_sk;
+    }
+    // set the form values as we do have no values found yet
     if (empty($cf7_sk['api-username'])){
         $cf7_sk['api-username'] = 'YOUR-API-USERNAME';
     };
@@ -148,11 +167,14 @@ function set_salesking_defaults_if_empty($cf7_sk){
 return $cf7_sk;
 }
 
+
+
 function wpcf7_sk_add_salesking($args)
 {
     $cf7_sk_defaults = array();
     // set some defaults
     $cf7_sk = get_option( 'cf7_sk_'.$args->id, $cf7_sk_defaults );
+    # if the form is new add the defaults
     $cf7_sk = set_salesking_defaults_if_empty($cf7_sk);
     // hacky
     // check if the post contained the test and submitt button
@@ -239,6 +261,12 @@ if ($sk_activated && $sk_test_credentials){
         <div class="mail-field">
         <label for="wpcf7-salesking-test-credentials"><?php echo esc_html( __( 'Test your Credentials here:', 'wpcf7' ) ); ?></label><br />
         <input type="submit" class="button-primary" id="wpcf7-salesking-test-credentials" name="wpcf7-salesking[test-credentials]" value="<?php echo esc_html( __( 'save and test credentials', 'wpcf7' ) ); ?>"   />
+        </div>
+        <div class="mail-field">
+        <hr></hr>
+        <p><strong> Note: </strong></br>
+         <?php echo __( 'Per Field please enter only one placeholder like [your-email]. More Placeholder are not supported yet'); ?>
+        </p>
         </div>
         
     </div>
