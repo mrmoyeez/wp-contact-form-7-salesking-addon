@@ -159,6 +159,11 @@ class SkRest {
             
             $form_data['sk_comment'] = "".$form_data['sk_comment']."\n".$form_data['sk_comment2']."\n";
         }
+        // massage the data tags 
+        // add tag 2 to the tag list
+        if (!empty($form_data['sk_tag2'])){
+            $form_data['sk_tag'] = "".$form_data['sk_tag']." ".$form_data['sk_tag2']."";
+        }
         try {
             $contact->bind($form_data, array(
                 "sk_email" => "email",

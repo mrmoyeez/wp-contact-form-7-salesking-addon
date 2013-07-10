@@ -242,6 +242,10 @@ if ($sk_activated && $sk_test_credentials){
         <label for="wpcf7-salesking-data-tag"><?php echo esc_html( __( 'Data Tags:', 'wpcf7' ) ); ?></label><br />
         <input type="text" id="wpcf7-salesking-data-tag" name="wpcf7-salesking[data-tag]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['data-tag'] ); ?>" />
         </div>
+        <div class="mail-field">
+        <label for="wpcf7-salesking-data-tag"><?php echo esc_html( __( 'Additional Data Tag:', 'wpcf7' ) ); ?></label><br />
+        <input type="text" id="wpcf7-salesking-data-tag2" name="wpcf7-salesking[data-tag2]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['data-tag2'] ); ?>" />
+        </div>
     </div>
     
     <div class="half-right">
@@ -265,7 +269,7 @@ if ($sk_activated && $sk_test_credentials){
         <div class="mail-field">
         <hr></hr>
         <p><strong> Note: </strong></br>
-         <?php echo __( 'Per Field please enter only one placeholder like [your-email]. More Placeholder are not supported yet'); ?>
+         <?php echo __( 'Please enter only one placeholder per field. [your-email] [foobar] does not work yet.'); ?>
         </p>
         </div>
         
@@ -323,6 +327,9 @@ function wpcf7_sk_add_data($obj){
         
         $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['data-tag'], $obj->posted_data );
         $payload['sk_tag'] = strip_unprocessed_tags_or_null ( $cf7_sk['data-tag'], $tmp);
+        
+        $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['data-tag2'], $obj->posted_data );
+        $payload['sk_tag2'] = strip_unprocessed_tags_or_null ( $cf7_sk['data-tag2'], $tmp);
         
         $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['organization-name'], $obj->posted_data );
         $payload['sk_organization'] = strip_unprocessed_tags_or_null ( $cf7_sk['organization-name'], $tmp);
