@@ -145,35 +145,16 @@ class SkRest {
         $ok = false;
         $contact = $this->getApi()->getObject('contact');
         $contact->type = 'Lead';
-        // array to the object
-        
         // some error prevention massages
-        if (empty($form_data['sk_organization']) && 
-            empty($form_data['sk_name']) &&
-            !(empty($form_data['sk_email']))
+        if (empty($form_data['organisation']) &&
+            empty($form_data['last_name']) &&
+            !(empty($form_data['email']))
         ){
-            $form_data['sk_name'] = $form_data['sk_email'];
+            $form_data['last_name'] = $form_data['email'];
         }
-        // massage the comments
-        if (!empty($form_data['sk_comment']) or !empty($form_data['sk_comment2'])){
-            
-            $form_data['sk_comment'] = "".$form_data['sk_comment']."\n".$form_data['sk_comment2']."\n";
-        }
-        // massage the data tags 
-        // add tag 2 to the tag list
-        if (!empty($form_data['sk_tag2'])){
-            $form_data['sk_tag'] = "".$form_data['sk_tag']." ".$form_data['sk_tag2']."";
-        }
+
         try {
-            $contact->bind($form_data, array(
-                "sk_email" => "email",
-                "sk_name" => "last_name",
-                "sk_organization" => "organisation",
-                "sk_tag" => "tag_list",
-                "sk_phone_office" => "phone_office",
-                "sk_ref" => "lead_ref",
-                "sk_comment" => "notes"
-            ));
+            $contact->bind($form_data);
         }
         catch (SaleskingException $e) {
             return false;

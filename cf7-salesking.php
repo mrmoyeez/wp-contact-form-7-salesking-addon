@@ -3,12 +3,12 @@
 Plugin Name: Contact Form 7 - SalesKing Addon
 Plugin URI: http://www.salesking.eu/wordpress-contributions/salesking-addon-for-contact-form-7/
 Description: Add the power of SalesKing to Contact Form 7
-Author URI: http://www.saleskin.eu
+Author URI: http://www.salesking.eu
 Version: 0.02
 */
 
 /*  
-MIT Licens
+MIT Licence
 */
 // first check if it is good to go?
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' ); 
@@ -22,11 +22,11 @@ if ($is_active == '1') {
 function activationHook() {
     if (!version_compare( PHP_VERSION, '5.3.0', '>=' )) {
         deactivate_plugins( __FILE__ );
-        wp_die( wp_sprintf( __( 'Sorry, This plugin has taken a bold step in requiring PHP 5.3.0+. Your server is currently running PHP %2s, Please bug your host to upgrade to a recent version of PHP which is less bug-prone.', 'wpcf7-salesking' ), PHP_VERSION ) );
+        wp_die( wp_sprintf( __( 'Sorry, This plugin has taken a bold step in requiring PHP 5.3.0+. Your server is currently running PHP %2s, Please bug your host to upgrade to a recent version of PHP which is less bug-prone.', 'wpcf7-sk' ), PHP_VERSION ) );
     }
     if (!in_array('curl', get_loaded_extensions())) {
         deactivate_plugins( __FILE__ );
-        wp_die( __( 'Sorry, This plugin requires the curl extension for PHP which isn\'t available on you server. Please contact your host.', 'wpcf7-salesking' ));
+        wp_die( __( 'Sorry, This plugin requires the curl extension for PHP which isn\'t available on you server. Please contact your host.', 'wpcf7-sk' ));
     }
 }
 
@@ -42,11 +42,11 @@ add_action( 'wpcf7_after_save', 'wpcf7_sk_save_salesking' );
 
 function wpcf7_sk_save_salesking($args)
 {
-    update_option( 'cf7_sk_'.$args->id, $_POST['wpcf7-salesking'] );
+    update_option( 'cf7_sk_'.$args->id, $_POST['wpcf7-sk'] );
     // check the credentials on save 
     $sk_activated = false;
     $sk_test_credentials = false;
-    $wp_sk = $_POST['wpcf7-salesking']; 
+    $wp_sk = $_POST['wpcf7-sk']; 
     // sk activated ?
     if (isset($wp_sk['active']) && 
        (strlen($wp_sk['active']) == 1) && 
@@ -66,9 +66,9 @@ function setup_rest_api($args){
     // just instantiate the api
     require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'cf7-salesking-rest.php');
     $input =  array();
-    $input['sk_url'] = "https://".$args['subdomain'].".salesking.eu";
-    $input['sk_username'] = $args['api-username'];
-    $input['sk_password'] = $args['api-userpw']; 
+    $input['sk_url'] = "https://".$args['sk_subdomain'].".salesking.eu";
+    $input['sk_username'] = $args['sk_username'];
+    $input['sk_password'] = $args['sk_password'];
     $rest = new SkRest();
     $rest->setOptions($input);
     return $rest;
@@ -112,9 +112,9 @@ function show_sk_metabox($cf){
 function is_no_user_or_pw_or_subdomain($cf7_sk){
     // some hacky marker to determine if we initialize the form first time
     $ok = false;
-    if (empty($cf7_sk['api-username']) or (
-        empty($cf7_sk['api-userpw']) or (
-        empty($cf7_sk['subdomain']))))
+    if (empty($cf7_sk['sk_username']) or (
+        empty($cf7_sk['sk_password']) or (
+        empty($cf7_sk['sk_subdomain']))))
         {
         $ok = true;
     }
@@ -130,39 +130,36 @@ function set_salesking_defaults_if_empty($cf7_sk){
         return $cf7_sk;
     }
     // set the form values as we do have no values found yet
-    if (empty($cf7_sk['api-username'])){
-        $cf7_sk['api-username'] = 'YOUR-API-USERNAME';
+    if (empty($cf7_sk['sk_username'])){
+        $cf7_sk['sk_username'] = 'YOUR-API-USERNAME';
     };
-    if (empty($cf7_sk['api-userpw'])){
-        $cf7_sk['api-userpw'] = 'YOUR-API-USER-PASSWORD';
+    if (empty($cf7_sk['sk_password'])){
+        $cf7_sk['sk_password'] = 'YOUR-API-USER-PASSWORD';
     };
-    if (empty($cf7_sk['subdomain'])){
-        $cf7_sk['subdomain'] = 'MY-SUBDOMAIN';
+    if (empty($cf7_sk['sk_subdomain'])){
+        $cf7_sk['sk_subdomain'] = 'MY-SUBDOMAIN';
     };
     // form specific settings
     if (empty($cf7_sk['email'])){
         $cf7_sk['email'] = '[your-email]';
     };
-    if (empty($cf7_sk['name'])){
-        $cf7_sk['name'] = '[your-name]';
+    if (empty($cf7_sk['last_name'])){
+        $cf7_sk['last_name'] = '[your-name]';
     };
-    if (empty($cf7_sk['organization-name'])){
-        $cf7_sk['organization-name'] = '[your-organization]';
+    if (empty($cf7_sk['organisation'])){
+        $cf7_sk['organisation'] = '[organisation]';
     };
-    if (empty($cf7_sk['phone-office'])){
-        $cf7_sk['phone-office'] = '[your-phone]';
+    if (empty($cf7_sk['phone_office'])){
+        $cf7_sk['phone_office'] = '[phone_office]';
     };
-    if (empty($cf7_sk['data-tag'])){
-        $cf7_sk['data-tag'] = 'website-contact-form';
+    if (empty($cf7_sk['tag_list'])){
+        $cf7_sk['tag_list'] = 'example-tag';
     };
-    if (empty($cf7_sk['lead-notice'])){
-        $cf7_sk['lead-notice'] = '[your-subject]';
+    if (empty($cf7_sk['sk_notes'])){
+        $cf7_sk['notes'] = "[your-subject] \n[your-message]";
     };
-    if (empty($cf7_sk['lead-notice2'])){
-        $cf7_sk['lead-notice2'] = '[your-message]';
-    };
-    if (empty($cf7_sk['lead-source'])){
-        $cf7_sk['lead-source'] = '[_post_url]';
+    if (empty($cf7_sk['lead_ref'])){
+        $cf7_sk['lead_ref'] = '[_post_url]';
     };
 return $cf7_sk;
 }
@@ -195,8 +192,8 @@ function wpcf7_sk_add_salesking($args)
     ?>
 
 <div class="mail-field">
-    <input type="checkbox" id="wpcf7-salesking-active" name="wpcf7-salesking[active]" value="1"<?php echo ( $cf7_sk['active']==1 ) ? ' checked="checked"' : ''; ?> />
-    <label for="wpcf7-salesking-active"><?php echo esc_html( __( 'Use SalesKing Integration', 'wpcf7' ) ); ?></label>
+    <input type="checkbox" id="wpcf7-sk-active" name="wpcf7-sk[active]" value="1"<?php echo ( isset($cf7_sk['active']) && $cf7_sk['active']==1 ) ? ' checked="checked"' : ''; ?> />
+    <label for="wpcf7-sk-active"><?php echo esc_html( __( 'Use SalesKing Integration', 'wpcf7' ) ); ?></label>
 <div class="pseudo-hr"></div>
 <?php
 // success message if the post tested the credentials
@@ -211,68 +208,62 @@ if ($sk_activated && $sk_test_credentials){
 <div class="mail-fields">
     <div class="half-left">
         <div class="mail-field">
-            <label for="wpcf7-salesking-email"><?php echo esc_html( __( 'Lead Email:', 'wpcf7' ) ); ?></label><br />
-            <input type="text" id="wpcf7-salesking-email" name="wpcf7-salesking[email]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['email'] ); ?>" />
+            <label for="wpcf7-sk-email"><?php echo esc_html( __( 'Lead Email:', 'wpcf7' ) ); ?></label><br />
+            <input type="text" id="wpcf7-sk-email" name="wpcf7-sk[email]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['email'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-salesking-name"><?php echo esc_html( __( 'Full Name:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-salesking-name" name="wpcf7-salesking[name]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['name'] ); ?>" />
+        <label for="wpcf7-sk-last_name"><?php echo esc_html( __( 'Full Name:', 'wpcf7' ) ); ?></label><br />
+        <input type="text" id="wpcf7-sk-last_name" name="wpcf7-sk[last_name]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['last_name'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-salesking-organization-name"><?php echo esc_html( __( 'Organization Name:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-salesking-organization-name" name="wpcf7-salesking[organization-name]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['organization-name'] ); ?>" />
+        <label for="wpcf7-sk-organisation"><?php echo esc_html( __( 'Organization Name:', 'wpcf7' ) ); ?></label><br />
+        <input type="text" id="wpcf7-sk-organisation" name="wpcf7-sk[organisation]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['organisation'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-salesking-work-phone"><?php echo esc_html( __( 'Phone Office:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-salesking-phone-office" name="wpcf7-salesking[phone-office]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['phone-office'] ); ?>" />
+        <label for="wpcf7-sk-work-phone"><?php echo esc_html( __( 'Phone Office:', 'wpcf7' ) ); ?></label><br />
+        <input type="text" id="wpcf7-sk-phone_office" name="wpcf7-sk[phone_office]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['phone_office'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-salesking-lead-notice"><?php echo esc_html( __( 'Lead Notice:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-salesking-lead-notice" name="wpcf7-salesking[lead-notice]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['lead-notice'] ); ?>" />
+        <label for="wpcf7-sk-notes"><?php echo esc_html( __( 'Lead Notice:', 'wpcf7' ) ); ?></label><br />
+        <textarea id="wpcf7-sk-notes" name="wpcf7-sk[notes]" class="wide"  rows="3"> <?php echo esc_attr( $cf7_sk['notes'] ); ?> </textarea>
+
+
         </div>
         <div class="mail-field">
-        <label for="wpcf7-salesking-lead-notice2"><?php echo esc_html( __( 'Lead Notice2:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-salesking-lead-notice2" name="wpcf7-salesking[lead-notice2]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['lead-notice2'] ); ?>" />
+        <label for="wpcf7-sk-lead_ref"><?php echo esc_html( __( 'Lead Source:', 'wpcf7' ) ); ?></label><br />
+        <input type="text" id="wpcf7-sk-lead_ref" name="wpcf7-sk[lead_ref]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['lead_ref'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-salesking-lead-source"><?php echo esc_html( __( 'Lead Source:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-salesking-lead-source" name="wpcf7-salesking[lead-source]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['lead-source'] ); ?>" />
-        </div>
-        <div class="mail-field">
-        <label for="wpcf7-salesking-data-tag"><?php echo esc_html( __( 'Data Tags:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-salesking-data-tag" name="wpcf7-salesking[data-tag]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['data-tag'] ); ?>" />
-        </div>
-        <div class="mail-field">
-        <label for="wpcf7-salesking-data-tag"><?php echo esc_html( __( 'Additional Data Tag:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-salesking-data-tag2" name="wpcf7-salesking[data-tag2]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['data-tag2'] ); ?>" />
+        <label for="wpcf7-sk-tag_list"><?php echo esc_html( __( 'Data Tags:', 'wpcf7' ) ); ?></label><br />
+        <input type="text" id="wpcf7-sk-tag_list" name="wpcf7-sk[tag_list]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['tag_list'] ); ?>" />
         </div>
     </div>
     
     <div class="half-right">
         <div class="mail-field">
-        <label for="wpcf7-salesking-api-username"><?php echo esc_html( __( 'API Username:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-salesking-api" name="wpcf7-salesking[api-username]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['api-username'] ); ?>" />
+        <label for="wpcf7-sk-sk_username"><?php echo esc_html( __( 'API Username:', 'wpcf7' ) ); ?></label><br />
+        <input type="text" id="wpcf7-sk-api" name="wpcf7-sk[sk_username]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_username'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-salesking-api-userpw"><?php echo esc_html( __( 'API User Password:', 'wpcf7' ) ); ?></label><br />
-        <input type="password" id="wpcf7-salesking-api-userpw" name="wpcf7-salesking[api-userpw]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['api-userpw'] ); ?>" />
+        <label for="wpcf7-sk-sk_password"><?php echo esc_html( __( 'API User Password:', 'wpcf7' ) ); ?></label><br />
+        <input type="password" id="wpcf7-sk-sk_password" name="wpcf7-sk[sk_password]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_password'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-salesking-subdomain"><?php echo esc_html( __( 'Your Salesking Subdomain:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-salesking-subdomain" name="wpcf7-salesking[subdomain]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['subdomain'] ); ?>" />
+        <label for="wpcf7-sk-subdomain"><?php echo esc_html( __( 'Your Salesking Subdomain:', 'wpcf7' ) ); ?></label><br />
+        <input type="text" id="wpcf7-sk-subdomain" name="wpcf7-sk[sk_subdomain]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_subdomain'] ); ?>" />
         </div>
         
         <div class="mail-field">
-        <label for="wpcf7-salesking-test-credentials"><?php echo esc_html( __( 'Test your Credentials here:', 'wpcf7' ) ); ?></label><br />
-        <input type="submit" class="button-primary" id="wpcf7-salesking-test-credentials" name="wpcf7-salesking[test-credentials]" value="<?php echo esc_html( __( 'save and test credentials', 'wpcf7' ) ); ?>"   />
+        <label for="wpcf7-sk-test-credentials"><?php echo esc_html( __( 'Test your Credentials here:', 'wpcf7' ) ); ?></label><br />
+        <input type="submit" class="button-primary" id="wpcf7-sk-test-credentials" name="wpcf7-sk[test-credentials]" value="<?php echo esc_html( __( 'save and test credentials', 'wpcf7' ) ); ?>"   />
         </div>
+      <!--
         <div class="mail-field">
         <hr></hr>
         <p><strong> Note: </strong></br>
          <?php echo __( 'Please enter only one placeholder per field. [your-email] [foobar] does not work yet.'); ?>
         </p>
-        </div>
-        
+       </div>-->
     </div>
     
     <br class="clear" />
@@ -310,73 +301,29 @@ function strip_unprocessed_tags_or_null($val1, $ret_val2, $begin_tag_indicator= 
     }
     return $ret_val2;
 }
+
+/**
+ * Sends form data to salesking, first substitutes placeholders in SK contact form setting fields
+ * @param $obj WPCF7_ContactForm
+ */
 function wpcf7_sk_add_data($obj){
-    // function gets the posted data massages and submitts it
-    // pull the options from
     $cf7_sk = get_option( 'cf7_sk_'.$obj->id );
-    if( $cf7_sk )
-    {
-        $regex = '/\[\s*([a-zA-Z_][0-9a-zA-Z:._-]*)\s*\]/';
-        $callback = array( &$obj, 'cf7_sk_callback' );
-        // massage the data before handover to the api
-        $payload = array();
-        $payload['sk_email'] = cf7_sk_tag_replace( $regex, $cf7_sk['email'], $obj->posted_data );
-        
-        $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['name'], $obj->posted_data );
-        $payload['sk_name'] = strip_unprocessed_tags_or_null ( $cf7_sk['name'], $tmp);
-        
-        $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['data-tag'], $obj->posted_data );
-        $payload['sk_tag'] = strip_unprocessed_tags_or_null ( $cf7_sk['data-tag'], $tmp);
-        
-        $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['data-tag2'], $obj->posted_data );
-        $payload['sk_tag2'] = strip_unprocessed_tags_or_null ( $cf7_sk['data-tag2'], $tmp);
-        
-        $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['organization-name'], $obj->posted_data );
-        $payload['sk_organization'] = strip_unprocessed_tags_or_null ( $cf7_sk['organization-name'], $tmp);
-        
-        $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['phone-office'], $obj->posted_data );
-        $payload['sk_phone_office'] = strip_unprocessed_tags_or_null ( $cf7_sk['phone-office'], $tmp);
-        
-        $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['lead-notice'], $obj->posted_data );
-        $payload['sk_comment'] = strip_unprocessed_tags_or_null ( $cf7_sk['lead-notice'], $tmp);
-        $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['lead-notice2'], $obj->posted_data );
-        $payload['sk_comment2'] = strip_unprocessed_tags_or_null ( $cf7_sk['lead-notice2'], $tmp);
-        $tmp = cf7_sk_tag_replace( $regex, $cf7_sk['lead-source'], $obj->posted_data );
-        $payload['sk_ref'] = strip_unprocessed_tags_or_null ( $cf7_sk['lead-source'], $tmp);
-        // now make the comms with the api and post the stuff
-        // setup the api
-        $sk_API = setup_rest_api($cf7_sk);
-        $ok = $sk_API->send_data($payload);
+    if( $cf7_sk ) {
+      $payload = array();
+      $sk_fields = array('email', 'last_name', 'tag_list', 'lead_ref', 'phone_office', 'organisation', 'notes');
+      foreach($sk_fields as $field){
+        $tmp = $obj->replace_mail_tags($cf7_sk[$field] );
+        $payload[$field] = strip_unprocessed_tags_or_null ( $cf7_sk[$field], $tmp);
+      }
+      // setup and post to api
+      $sk_API = setup_rest_api($cf7_sk);
+      $ok = $sk_API->send_data($payload);
     }
 }
 
-function cf7_sk_tag_replace( $pattern, $subject, $posted_data, $html = false ) {
-    if( preg_match($pattern,$subject,$matches) > 0)
-    {
-        if ( isset( $posted_data[$matches[1]] ) ) {
-            $submitted = $posted_data[$matches[1]];
-            if ( is_array( $submitted ) )
-                $replaced = join( ', ', $submitted );
-            else
-                $replaced = $submitted;
-            if ( $html ) {
-                $replaced = strip_tags( $replaced );
-                $replaced = wptexturize( $replaced );
-            }
-            $replaced = apply_filters( 'wpcf7_mail_tag_replaced', $replaced, $submitted );
-            return stripslashes( $replaced );
-        }
-        elseif(sizeof($matches) >= 2){
-            if ( $special = apply_filters( 'wpcf7_special_mail_tags', '', $matches[1], false ) )
-                return $special;
-        }
-        return $matches[0];
-    }
-    return $subject;
-}
 
 function wpcf7_sk_plugin_url( $path = '' ) {
-    return plugins_url( $path, WPCF7_CM_PLUGIN_BASENAME );
+    return plugins_url( $path, WPCF7_SK_PLUGIN_BASENAME );
 }
 
 add_filter( 'plugin_action_links', 'wpcf7_sk_plugin_action_links', 10, 2 );
