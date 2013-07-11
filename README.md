@@ -11,9 +11,9 @@ Capture Lead's like a pro, without touching any data.
 
 If you already have [Contact Form 7](http://wordpress.org/plugins/contact-form-7/), capturing Leads from your site is just two simple steps:
 
-0. Get a SalesKing account at http:\\www.salesking.eu
-1. Install and activate contact form 7 + this plugin
-2. Configure a contact form with SalesKing integration (see picture settings.png)
+1. Get a [SalesKing account](https://app.salesking.eu/signup/wpcf)
+2. Install and activate contact form 7 + this plugin
+3. Configure a contact form with SalesKing integration (see picture settings.png)
 
 ### Advanced Usage
 
