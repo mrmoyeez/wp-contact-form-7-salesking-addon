@@ -1,31 +1,99 @@
 <?php
 
+function call_SkCfAdmin(){
+  return new SkCfAdmin();
+}
+if ( is_admin() )
+  add_action( 'admin_init', 'call_SkCfAdmin' );
+
 /**
- * Adds SalesKing fields to WPContactForm7. Display admin form fields, process form submits
+ * Adds SalesKing form fields to WPContactForm7 admin area.
  * Class SkCf7
  */
-class SkCf7{
+class SkCfAdmin{
 
+  /**
+   * register wordpress and contact_form hooks
+   */
+  function __construct(){
+    add_action( 'wpcf7_admin_notices', array( &$this, 'add_meta_box' ) );
+    add_action( 'wpcf7_admin_after_mail_2', array( &$this, 'show_meta_box' ));
+    add_action( 'wpcf7_after_save', array( &$this, 'save_form' ) );
+    add_action( 'admin_print_scripts', array( &$this, 'enqueue_scripts' ) );
+    add_filter( 'plugin_action_links', array( &$this, 'settings_link' ), 10, 2 );
+    add_action( 'wp_ajax_sk_login_test',  array( &$this, 'sk_login_test' ) );
+  }
+
+  function sk_login_test(){
+    header("Pragma: no-cache");
+    header("Cache-Control: no-cache, must-revalidate");
+    header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
+    header("Content-type: text/plain");
+    if($this->valid_credentials($_GET))
+      echo 'ok';
+    die();
+  }
+
+  /**
+   * add our javascript to the admin page
+   */
+  function enqueue_scripts(){
+    global $plugin_page;
+    if ( ! isset( $plugin_page ) || 'wpcf7' != $plugin_page )
+      return;
+
+    $admin_js = plugins_url('assets/js/admin.js', WPCF7_SK_PLUGIN_BASENAME);
+    wp_enqueue_script( 'wpcf7-sk-admin', $admin_js, array( 'jquery', 'wpcf7-admin' ), WPCF7_SK_VERSION, true );
+  }
+
+  /**
+   * Settings link in the plugin list, goes to wp contact form
+   */
+  function settings_link($links, $file){
+    if ( $file != WPCF7_SK_PLUGIN_BASENAME )
+      return $links;
+
+    $settings_link = '<a href="' . menu_page_url( 'wpcf7', false ) . '">'. esc_html( __( 'Settings', 'wpcf7' ) ) . '</a>';
+    array_unshift( $links, $settings_link );
+    return $links;
+  }
+
+  /**
+   * register the meta box on the contact form
+   */
+  function add_meta_box (){
+    if ( !wpcf7_admin_has_edit_cap() )
+      return;
+    add_meta_box(
+      'cf7skdiv',
+      __( 'SalesKing', 'wpcf7' ),
+      array( &$this, 'show_form' ),
+      'cfseven',
+      'cf7_sk',
+      'core',
+      array( 'id' => 'wpcf7-cf7',
+        'name' => 'cf7_sk',
+        'use' => __( 'Use SalesKing', 'wpcf7' ) ) );
+
+  }
+
+  /**
+   * calls wp method to render the meta boxes for the form
+   */
+  function show_meta_box($cf){
+    do_meta_boxes( 'cfseven', 'cf7_sk', $cf );
+  }
 
   /**
    * Save ContactForm SalesKing settings in admin
    * @param $cf WPCF7_ContactForm
    */
-  function save_form($args) {
-    update_option( 'cf7_sk_'.$args->id, $_POST['wpcf7-sk'] );
+  function save_form($cf) {
+    $params = $_POST['wpcf7-sk'];
+    update_option( 'cf7_sk_'.$cf->id, $params );
     // check the credentials on save
-    $sk_activated = false;
-    $sk_test_credentials = false;
-    $wp_sk = $_POST['wpcf7-sk'];
-    // sk activated ?
-    if (isset($wp_sk['active']) && (strlen($wp_sk['active']) == 1) && ($wp_sk['active'] == 1) )
-      $sk_activated = true;
-
-    if (isset($wp_sk['test-credentials']) && $wp_sk['test-credentials'] == true )
-      $sk_test_credentials = true;
-
-    if (($sk_activated == true) && ($sk_test_credentials == true ))
-      $this->validate_redentials($wp_sk);
+//    if ( isset($params['active']) && isset($params['test-credentials']) )
+//      $this->validate_credentials($params);
 
   }
 
@@ -40,33 +108,12 @@ class SkCf7{
     $cf7_sk = get_option( 'cf7_sk_'.$cf->id, $cf7_sk_defaults );
     # if the form is new add the defaults
     $cf7_sk = $this->set_defaults($cf7_sk);
-    // hacky
-    // check if the post contained the test and submit button
-    // if so say it was successfull, as in fail case the wp_die got hit
-    // use this bad way, as there seems to be no easy way for sending msgs to the user
-    $sk_activated = false;
-    $sk_test_credentials = false;
-    if (isset($cf7_sk['active']) &&
-        (strlen($cf7_sk['active']) == 1) &&
-        ($cf7_sk['active'] == 1) )
-    {
-      $sk_activated = true;
-    };
-    if (isset($cf7_sk['test-credentials']) && ($cf7_sk['test-credentials'] == true ))
-      $sk_test_credentials = true ;
-
     ?>
 
     <div class="mail-field">
       <input type="checkbox" id="wpcf7-sk-active" name="wpcf7-sk[active]" value="1"<?php echo ( isset($cf7_sk['active']) && $cf7_sk['active']==1 ) ? ' checked="checked"' : ''; ?> />
       <label for="wpcf7-sk-active"><?php echo esc_html( __( 'Use SalesKing Integration', 'wpcf7' ) ); ?></label>
       <div class="pseudo-hr"></div>
-      <?php
-      // success message if the post tested the credentials
-      if ($sk_activated && $sk_test_credentials){
-        echo "<div class=\"message error updated \"><p>Salesking Credentials successfully tested</p></div>";
-      }
-      ?>
     </div>
 
     <br class="clear" />
@@ -106,7 +153,7 @@ class SkCf7{
       <div class="half-right">
         <div class="mail-field">
           <label for="wpcf7-sk-sk_username"><?php echo esc_html( __( 'API Username:', 'wpcf7' ) ); ?></label><br />
-          <input type="text" id="wpcf7-sk-api" name="wpcf7-sk[sk_username]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_username'] ); ?>" />
+          <input type="text" id="wpcf7-sk-sk_username" name="wpcf7-sk[sk_username]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_username'] ); ?>" />
         </div>
         <div class="mail-field">
           <label for="wpcf7-sk-sk_password"><?php echo esc_html( __( 'API User Password:', 'wpcf7' ) ); ?></label><br />
@@ -117,8 +164,7 @@ class SkCf7{
           <input type="text" id="wpcf7-sk-subdomain" name="wpcf7-sk[sk_subdomain]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_subdomain'] ); ?>" />
         </div>
         <div class="mail-field">
-          <label for="wpcf7-sk-test-credentials"><?php echo esc_html( __( 'Test your Credentials here:', 'wpcf7' ) ); ?></label><br />
-          <input type="submit" class="button-primary" id="wpcf7-sk-test-credentials" name="wpcf7-sk[test-credentials]" value="<?php echo esc_html( __( 'save and test credentials', 'wpcf7' ) ); ?>"   />
+          <input type="submit" class="button-primary" data-url="<?php echo admin_url('admin-ajax.php').'?action=sk_login_test'  ?>" id="wpcf7-sk-test-credentials" name="wpcf7-sk[test-credentials]" value="<?php echo __( 'Test SalesKing connection', 'wpcf7' ); ?>"/>
         </div>
         <!--
         <div class="mail-field">
@@ -134,28 +180,19 @@ class SkCf7{
   <?php
   }
 
-
-  function validate_credentials($args){
+  function valid_credentials($args){
     // this function calls the api, and tries a customer get
     // if there is no 200, send an error message
     $rest = $this->setup_rest_api($args);
     $input = $rest->validateOptions();
-    if (isset($input['message']) == true){
-      //add_action('wpcf7_admin_notices', 'wpcf7_sk_credentials_validation_failed', 9);
-      echo "<div class=\"message error \"><p>Salesking Credentials failed</p></div>";
-      var_dump($input);
-      // @todo: improve the error message here
-      // found no way to do propper messaging
-      // we rely on the die here - BAD
-      wp_die("credential validation failed - hit back button and change credentials");
-    }
+    return !isset($input['message']);
   }
 
   /**
    * @param $args array with sk credentials from post params
    * @return SkRest
    */
-  function setup_rest_api($args){
+  private function setup_rest_api($args){
     $input =  array();
     $input['sk_url'] = "https://".$args['sk_subdomain'].".salesking.eu";
     $input['sk_username'] = $args['sk_username'];
@@ -170,7 +207,7 @@ class SkCf7{
    * @param $cf7_sk
    * @return mixed
    */
-  function set_defaults($cf7_sk){
+  private function set_defaults($cf7_sk){
 
     if ($this->has_credentials($cf7_sk))
       return $cf7_sk;
@@ -212,27 +249,9 @@ class SkCf7{
    * @param $cf7_sk
    * @return bool
    */
-  function has_credentials($cf7_sk){
+  private function has_credentials($cf7_sk){
     return !(empty($cf7_sk['sk_username']) && empty($cf7_sk['sk_password']) && empty($cf7_sk['sk_subdomain']));
   }
 
-  /**
-   * Sends form data to salesking, first substitutes placeholders in SK contact form setting fields
-   * @param $obj WPCF7_ContactForm
-   */
-  function submit($obj){
-    $cf7_sk = get_option( 'cf7_sk_'.$obj->id );
-    if( $cf7_sk ) {
-      $payload = array();
-      $sk_fields = array('email', 'last_name', 'tag_list', 'lead_ref', 'phone_office', 'organisation', 'notes');
-      foreach($sk_fields as $field){
-        $tmp = $obj->replace_mail_tags($cf7_sk[$field] );
-        $payload[$field] = strip_unprocessed_tags_or_null ( $cf7_sk[$field], $tmp);
-      }
-      // setup and post to api
-      $sk_API = $this->setup_rest_api($cf7_sk);
-      $ok = $sk_API->send_data($payload);
-    }
-  }
 
 }

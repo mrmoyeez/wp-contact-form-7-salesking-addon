@@ -1,4 +1,32 @@
 jQuery(document).ready(function() {
+
+    var fields = ['sk_password', 'sk_username', 'sk_subdomain'];
+
+    jQuery('#wpcf7-sk-test-credentials').on('click', function(e){
+        e.preventDefault();
+        // collect post data by form field name .. ids will change
+        var data = {};
+        jQuery.each(fields, function(i, field_name) {
+          data[field_name] = jQuery('input[name*="'+field_name+'"]').val();
+        });
+
+        jQuery.ajax({
+//          type: 'POST',
+          url: jQuery(this).attr('data-url'),
+          data: data,
+          success: function(data, status, xhr){  //String textStatus, jqXHR jqXHR
+              //insert result below btn
+            var color = (data=='ok') ? '#A8F794' : '#F5AAAA';  //green / red
+            jQuery.each(fields, function(i, field_name) {
+              jQuery('input[name*="'+field_name+'"]').css("background-color", color);
+            });
+          },
+            dataType: 'text'
+        });
+
+    });
+
+
 	try {
 		if (! jQuery('#wpcf7-sk-active').is(':checked'))
 			jQuery('#cf7skdiv .mail-fields').hide();
