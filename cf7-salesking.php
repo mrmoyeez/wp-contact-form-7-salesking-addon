@@ -4,12 +4,12 @@ Plugin Name: Contact Form 7 - SalesKing Addon
 Plugin URI: http://www.salesking.eu/wordpress-contributions/salesking-addon-for-contact-form-7/
 Description: Add the power of SalesKing to Contact Form 7
 Author URI: http://www.salesking.eu
-Version: 0.1.0
+Version: 1.0.0
 */
-define( 'WPCF7_SK_VERSION', '0.1.0' );
-/*  
-* MIT License
-*/
+// MIT License
+
+define( 'WPCF7_SK_VERSION', '1.0.0' );
+
 // first check if it is good to go?
 if (!version_compare( PHP_VERSION, '5.3.0', '>=' )) {
   deactivate_plugins( __FILE__ );
@@ -26,9 +26,10 @@ if (!is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
   wp_die('Contact Form 7 plugin is required to configure this SalesKing Addon plugin. Please install and activate Contact Form 7 plugin before activating SalesKing');
 }
 
+if ( ! defined( 'WPCF7_SK_PLUGIN_BASENAME' ) )
+  define( 'WPCF7_SK_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+
 require('models/sk_cf.class.php');
 require('models/sk_cf_admin.class.php');
 require('models/sk_rest.class.php');
 
-if ( ! defined( 'WPCF7_SK_PLUGIN_BASENAME' ) )
-    define( 'WPCF7_SK_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
