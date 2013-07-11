@@ -2,7 +2,8 @@
 
 ## Turn your Wordpress into a lead capture CRM machine
 
-Get your website's Contact Form 7 Data straight into SalesKing
+Get your website's Contact Form 7 Data straight into SalesKing.
+
 Capture Lead's like a pro, without touching any data.
 
 
