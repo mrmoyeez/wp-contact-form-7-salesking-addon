@@ -57,7 +57,7 @@ class SkRest {
                 echo "curl missing";
                 return false;
             }
-            require_once dirname(__FILE__) . '/../lib/salesking/salesking.php';
+            require_once dirname(__FILE__) . '/../vendor/salesking/salesking.php';
             // set up object
             $config = array(
                 "sk_url" => $sk_url,

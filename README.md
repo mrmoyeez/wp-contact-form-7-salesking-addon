@@ -1,24 +1,44 @@
 # SalesKing Wordpress Contact Form 7 Addon
+
 ## Turn your Wordpress into a lead capture CRM machine
-Get your Website Contact Form Data straight into SalesKing
-Capture Your Lead contact data without touching it.
+
+Get your website's Contact Form 7 Data straight into SalesKing
+Capture Lead's like a pro, without touching any data.
 
 
 ## How to pimp your wordpress contact form 7
+
+If you already have [Contact Form 7](http://wordpress.org/plugins/contact-form-7/), capturing Leads from your site is just two simple steps:
+
 0. Get a SalesKing account at http:\\www.salesking.eu
-1. Install and activate contact form 7 
-2. Install this plugin to the wp-contents\plugins folder
-3. Activate the plugin in the settings area: Settings > contact form 7 salesking addon
-4. see picture steps 1 to 4
-5. Configure a new contact form
-6. Activate the salesking integration for this form - step 1 
-7. enter your api user, api password, salesking sub domain - steps 2 to 4
-8. save the contact form - step 5
-9. Embed the contact form at any page you like
+1. Install and activate contact form 7 + this plugin
+2. Configure a contact form with SalesKing integration (see picture settings.png)
+
+### Advanced Usage
+
+On new forms we enter some fail-safe defaults:
+
+    Form-field      -> SalesKing Contact field
+    email           -> email
+    name            -> last_name
+    subject+message -> notes
+    form-url        -> lead_ref
+    some-tag        -> tag_list
+
+Besides the SK-fields above, we support form fields for phone_office and organisation.
+
+If you need more fields or any help just mail us at support@salesking.eu.
+You can see all contact fields in our API Browser: http://sk-api-browser.herokuapp.com/#contact
+
+
+
+### New to [Contact Form 7](http://wordpress.org/plugins/contact-form-7/) ?
+
+Go ahead install it, as it is by far the most complete free contact form plugin out there.
+
 
 
 ## System requirements
 Wordpress 3.5.x
 PHP 5.3.x+
 PHP cURL extension
-jQuery 1.8+
