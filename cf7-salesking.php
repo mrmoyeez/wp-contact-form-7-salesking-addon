@@ -212,50 +212,47 @@ if ($sk_activated && $sk_test_credentials){
             <input type="text" id="wpcf7-sk-email" name="wpcf7-sk[email]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['email'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-sk-last_name"><?php echo esc_html( __( 'Full Name:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-sk-last_name" name="wpcf7-sk[last_name]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['last_name'] ); ?>" />
+          <label for="wpcf7-sk-last_name"><?php echo esc_html( __( 'Full Name:', 'wpcf7' ) ); ?></label><br />
+          <input type="text" id="wpcf7-sk-last_name" name="wpcf7-sk[last_name]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['last_name'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-sk-organisation"><?php echo esc_html( __( 'Organization Name:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-sk-organisation" name="wpcf7-sk[organisation]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['organisation'] ); ?>" />
+          <label for="wpcf7-sk-organisation"><?php echo esc_html( __( 'Organization Name:', 'wpcf7' ) ); ?></label><br />
+          <input type="text" id="wpcf7-sk-organisation" name="wpcf7-sk[organisation]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['organisation'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-sk-work-phone"><?php echo esc_html( __( 'Phone Office:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-sk-phone_office" name="wpcf7-sk[phone_office]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['phone_office'] ); ?>" />
+          <label for="wpcf7-sk-work-phone"><?php echo esc_html( __( 'Phone Office:', 'wpcf7' ) ); ?></label><br />
+          <input type="text" id="wpcf7-sk-phone_office" name="wpcf7-sk[phone_office]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['phone_office'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-sk-notes"><?php echo esc_html( __( 'Lead Notice:', 'wpcf7' ) ); ?></label><br />
-        <textarea id="wpcf7-sk-notes" name="wpcf7-sk[notes]" class="wide"  rows="3"> <?php echo esc_attr( $cf7_sk['notes'] ); ?> </textarea>
-
-
+          <label for="wpcf7-sk-notes"><?php echo esc_html( __( 'Lead Notice:', 'wpcf7' ) ); ?></label><br />
+          <textarea id="wpcf7-sk-notes" name="wpcf7-sk[notes]" class="wide" rows="3"><?php echo esc_attr( $cf7_sk['notes'] ); ?> </textarea>
         </div>
         <div class="mail-field">
-        <label for="wpcf7-sk-lead_ref"><?php echo esc_html( __( 'Lead Source:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-sk-lead_ref" name="wpcf7-sk[lead_ref]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['lead_ref'] ); ?>" />
+          <label for="wpcf7-sk-lead_ref"><?php echo esc_html( __( 'Lead Source:', 'wpcf7' ) ); ?></label><br />
+          <input type="text" id="wpcf7-sk-lead_ref" name="wpcf7-sk[lead_ref]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['lead_ref'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-sk-tag_list"><?php echo esc_html( __( 'Data Tags:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-sk-tag_list" name="wpcf7-sk[tag_list]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['tag_list'] ); ?>" />
+          <label for="wpcf7-sk-tag_list"><?php echo esc_html( __( 'Data Tags:', 'wpcf7' ) ); ?></label><br />
+          <input type="text" id="wpcf7-sk-tag_list" name="wpcf7-sk[tag_list]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['tag_list'] ); ?>" />
         </div>
     </div>
     
     <div class="half-right">
         <div class="mail-field">
-        <label for="wpcf7-sk-sk_username"><?php echo esc_html( __( 'API Username:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-sk-api" name="wpcf7-sk[sk_username]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_username'] ); ?>" />
+          <label for="wpcf7-sk-sk_username"><?php echo esc_html( __( 'API Username:', 'wpcf7' ) ); ?></label><br />
+          <input type="text" id="wpcf7-sk-api" name="wpcf7-sk[sk_username]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_username'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-sk-sk_password"><?php echo esc_html( __( 'API User Password:', 'wpcf7' ) ); ?></label><br />
-        <input type="password" id="wpcf7-sk-sk_password" name="wpcf7-sk[sk_password]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_password'] ); ?>" />
+          <label for="wpcf7-sk-sk_password"><?php echo esc_html( __( 'API User Password:', 'wpcf7' ) ); ?></label><br />
+          <input type="password" id="wpcf7-sk-sk_password" name="wpcf7-sk[sk_password]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_password'] ); ?>" />
         </div>
         <div class="mail-field">
-        <label for="wpcf7-sk-subdomain"><?php echo esc_html( __( 'Your Salesking Subdomain:', 'wpcf7' ) ); ?></label><br />
-        <input type="text" id="wpcf7-sk-subdomain" name="wpcf7-sk[sk_subdomain]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_subdomain'] ); ?>" />
+          <label for="wpcf7-sk-subdomain"><?php echo esc_html( __( 'Your Salesking Subdomain:', 'wpcf7' ) ); ?></label><br />
+          <input type="text" id="wpcf7-sk-subdomain" name="wpcf7-sk[sk_subdomain]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_subdomain'] ); ?>" />
         </div>
-        
         <div class="mail-field">
-        <label for="wpcf7-sk-test-credentials"><?php echo esc_html( __( 'Test your Credentials here:', 'wpcf7' ) ); ?></label><br />
-        <input type="submit" class="button-primary" id="wpcf7-sk-test-credentials" name="wpcf7-sk[test-credentials]" value="<?php echo esc_html( __( 'save and test credentials', 'wpcf7' ) ); ?>"   />
+          <label for="wpcf7-sk-test-credentials"><?php echo esc_html( __( 'Test your Credentials here:', 'wpcf7' ) ); ?></label><br />
+          <input type="submit" class="button-primary" id="wpcf7-sk-test-credentials" name="wpcf7-sk[test-credentials]" value="<?php echo esc_html( __( 'save and test credentials', 'wpcf7' ) ); ?>"   />
         </div>
       <!--
         <div class="mail-field">
