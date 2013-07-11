@@ -1,4 +1,7 @@
 <?php
+/**
+ * Class SkRest submit data to SalesKing API
+ */
 class SkRest {
     private $options = null;
     private $apis = array();
@@ -54,7 +57,7 @@ class SkRest {
                 echo "curl missing";
                 return false;
             }
-            require_once dirname(__FILE__).'/lib/salesking/salesking.php';
+            require_once dirname(__FILE__) . '/../lib/salesking/salesking.php';
             // set up object
             $config = array(
                 "sk_url" => $sk_url,
