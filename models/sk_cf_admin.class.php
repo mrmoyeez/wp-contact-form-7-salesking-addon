@@ -180,6 +180,10 @@ class SkCfAdmin{
   <?php
   }
 
+  /**
+   * @param $args Array(sk_username=>.., sk_password=>.., sk_subdomain=>..)
+   * @return bool
+   */
   function valid_credentials($args){
     // this function calls the api, and tries a customer get
     // if there is no 200, send an error message
