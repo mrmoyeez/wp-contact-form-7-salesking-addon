@@ -10,6 +10,8 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Get your Contact Form 7 data straight into SalesKing CRM.
 
 == Description ==
+The plugin creates a lead with the contact information captured in any Contact-Form-7 form.
+You can add as many forms as you like and map arbitrary fields to advanced contact properties e.g tags, notes, lead_reference.
 
 = How to pimp your wordpress contact form 7 =
 
