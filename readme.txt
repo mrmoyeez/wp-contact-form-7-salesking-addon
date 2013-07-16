@@ -9,7 +9,9 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Get your Contact Form 7 data straight into SalesKing CRM.
 
+
 == Description ==
+
 The plugin creates a lead with the contact information captured in any Contact-Form-7 form.
 
 You can add as many forms as you like and map arbitrary fields to advanced contact properties e.g tags, notes, lead_reference.
@@ -50,10 +52,9 @@ You can see all possibly available contact fields in our [API Browser](http://sk
 * english (standard)
 
 = Requirements =
-* WordPress 3.2 and PHP 5.2.6 required!
+* WordPress 3.2 and PHP 5.2.6+ required!
 * curl is needed.
 
-Get the [BackWPup Pro](http://marketpress.com/product/backwpup-pro/) Version with more features on [MarketPress.com](http://marketpress.com/product/backwpup-pro/)
 
 == Frequently Asked Questions ==
 
@@ -61,7 +62,7 @@ Get the [BackWPup Pro](http://marketpress.com/product/backwpup-pro/) Version wit
 
 Because of security SalesKing has an advanced session-handling which causes the log-out. If you use the contact form addon you might consider to activate another user in your SalesKing-Account which then "works" as your API-User. Just get in contact with the SalesKing-Team.
 
-= I do not get how to work with contact form 7 - is there a documentation?
+= I do not get how to work with contact form 7 - is there a documentation? =
 
 Contact-Form 7 is on of the most used contact-form plugins for wordpress and therefore it is very well documented.
 You can find the [docs](http://contactform7.com/docs/), [FAQ](http://contactform7.com/faq/) and more detailed information about Contact Form 7 on [contactform7.com](http://contactform7.com/).
@@ -70,10 +71,12 @@ You can find the [docs](http://contactform7.com/docs/), [FAQ](http://contactform
 
 Yep, we just released our new support-center(german) - if you need answers which are not provided in our [support-center](https://hilfe.salesking.eu/) just drop us a mail support@salesking.eu we love to help, promise!
 
+
 == Screenshots ==
 
 1. Activate the SalesKing integration on a form
 2. Map fields collected by a form
+
 
 == Installation ==
 
@@ -84,6 +87,7 @@ Yep, we just released our new support-center(german) - if you need answers which
 = If you want to enhance the plugin itself, feel free to grab it on github =
 
 Download [for developers](https://github.com/salesking/wp-contact-form-7-salesking-addon) who want to open-source enhancements.
+
 
 == Changelog ==
 
