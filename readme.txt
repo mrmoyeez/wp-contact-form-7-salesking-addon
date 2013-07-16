@@ -11,9 +11,11 @@ Get your Contact Form 7 data straight into SalesKing CRM.
 
 == Description ==
 The plugin creates a lead with the contact information captured in any Contact-Form-7 form.
-You can add as many forms as you like and map arbitrary fields to advanced contact properties e.g tags, notes, lead_reference. Which enables you to create "special" forms e.g. to collect leads from dedicated marketing channels and sales channels.
 
-Within SalesKing you can then professionally work with the collected leads, follow-up by mail or phone, create estimates and so on.
+You can add as many forms as you like and map arbitrary fields to advanced contact properties e.g tags, notes, lead_reference.
+This enables you to create "special" forms e.g. to collect leads from dedicated marketing channels and sales channels.
+
+Within SalesKing you can then professionally work with the collected leads like e.g. follow-up by mail or phone, create estimates and so on.
 
 We suggest using the contact form 7 capabillitys like e.g. radio-buttons and selections to collect leads and dynamically tag them.
 This will give your sales team great insight by filtering the leads within SalesKing and use SalesKing as CRM.
