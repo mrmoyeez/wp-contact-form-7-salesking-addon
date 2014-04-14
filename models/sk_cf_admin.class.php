@@ -31,11 +31,10 @@ class SkCfAdmin{
     header("Pragma: no-cache");
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
-    header("Content-type: text/plain");
-    $rest = SkRest::init($_GET);
-    $res = $rest->validateOptions();
-    if(!$res['message'])
-      echo 'ok';
+    header("Content-type: application/json");
+    $rest = new SkRest($_GET);
+    $rest->test_credentials();
+    echo json_encode(array('errors'=>$rest->errors));
     die();
   }
 

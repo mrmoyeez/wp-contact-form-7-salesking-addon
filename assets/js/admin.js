@@ -1,29 +1,33 @@
 jQuery(document).ready(function() {
 
-    var fields = ['sk_password', 'sk_username', 'sk_subdomain'];
+    var fields = ['sk_password', 'sk_username', 'sk_url'];
 
     jQuery('#wpcf7-sk-test-credentials').on('click', function(e){
-        e.preventDefault();
-        // collect post data by form field name .. ids will change
-        var data = {};
-        jQuery.each(fields, function(i, field_name) {
-          data[field_name] = jQuery('input[name*="'+field_name+'"]').val();
-        });
+      e.preventDefault();
+      $('.sk-errors').remove();
+      // collect post data by form field name .. ids will change
+      var data = {};
+      jQuery.each(fields, function(i, field_name) {
+        data[field_name] = jQuery('input[name*="'+field_name+'"]').val();
+        //reset css
+        jQuery('input[name*="'+field_name+'"]').css("background-color", 'none');
+      });
 
-        jQuery.ajax({
-//          type: 'POST',
-          url: jQuery(this).attr('data-url'),
-          data: data,
-          success: function(data, status, xhr){  //String textStatus, jqXHR jqXHR
-              //insert result below btn
-            var color = (data=='ok') ? '#A8F794' : '#F5AAAA';  //green / red
-            jQuery.each(fields, function(i, field_name) {
-              jQuery('input[name*="'+field_name+'"]').css("background-color", color);
-            });
-          },
-            dataType: 'text'
-        });
-
+      jQuery.ajax({
+        url: jQuery(this).attr('data-url'),
+        data: data,
+        success: function(data, status, xhr){  //String textStatus, jqXHR jqXHR
+            //insert result below btn
+          var color = (data['errors'].length>0) ? '#F5AAAA' : '#A8F794' ;  //red / green
+          jQuery.each(fields, function(i, field_name) {
+            jQuery('input[name*="'+field_name+'"]').css("background-color", color);
+          });
+          if(data['errors'].length>0){
+            $('#wpcf7-sk-test-credentials').after('<div class="sk-errors">'+data['errors']+'</div>');
+          }
+        },
+        dataType: 'json'
+      });
     });
 
 
@@ -31,7 +35,7 @@ jQuery(document).ready(function() {
 		if (! jQuery('#wpcf7-sk-active').is(':checked'))
 			jQuery('#cf7skdiv .mail-fields').hide();
 
-            jQuery('#wpcf7-sk-active').click(function() {
+      jQuery('#wpcf7-sk-active').click(function() {
 			if (jQuery('#cf7skdiv .mail-fields').is(':hidden')
 			&& jQuery('#wpcf7-sk-active').is(':checked')) {
 				jQuery('#cf7skdiv .mail-fields').slideDown('fast');
