@@ -24,12 +24,17 @@ class SkCfAdmin{
     add_action( 'wp_ajax_sk_login_test',  array( &$this, 'sk_login_test' ) );
   }
 
+  /*
+   *  this function calls the api, and tries a customer get if there is no 200, send an error message
+   */
   function sk_login_test(){
     header("Pragma: no-cache");
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
     header("Content-type: text/plain");
-    if($this->valid_credentials($_GET))
+    $rest = SkRest::init($_GET);
+    $res = $rest->validateOptions();
+    if(!$res['message'])
       echo 'ok';
     die();
   }
@@ -94,7 +99,6 @@ class SkCfAdmin{
     // check the credentials on save
 //    if ( isset($params['active']) && isset($params['test-credentials']) )
 //      $this->validate_credentials($params);
-
   }
 
   /**
@@ -161,7 +165,7 @@ class SkCfAdmin{
         </div>
         <div class="mail-field">
           <label for="wpcf7-sk-subdomain"><?php echo esc_html( __( 'Your Salesking Subdomain:', 'wpcf7' ) ); ?></label><br />
-          <input type="text" id="wpcf7-sk-subdomain" name="wpcf7-sk[sk_subdomain]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_subdomain'] ); ?>" />
+          <input type="text" id="wpcf7-sk-subdomain" name="wpcf7-sk[sk_url]" class="wide" size="70" value="<?php echo esc_attr( $cf7_sk['sk_url'] ); ?>" />
         </div>
         <div class="mail-field">
           <input type="submit" class="button-primary" data-url="<?php echo admin_url('admin-ajax.php').'?action=sk_login_test'  ?>" id="wpcf7-sk-test-credentials" name="wpcf7-sk[test-credentials]" value="<?php echo __( 'Test SalesKing connection', 'wpcf7' ); ?>"/>
@@ -181,47 +185,21 @@ class SkCfAdmin{
   }
 
   /**
-   * @param $args Array(sk_username=>.., sk_password=>.., sk_subdomain=>..)
-   * @return bool
-   */
-  function valid_credentials($args){
-    // this function calls the api, and tries a customer get
-    // if there is no 200, send an error message
-    $rest = $this->setup_rest_api($args);
-    $input = $rest->validateOptions();
-    return !isset($input['message']);
-  }
-
-  /**
-   * @param $args array with sk credentials from post params
-   * @return SkRest
-   */
-  private function setup_rest_api($args){
-    $input =  array();
-    $input['sk_url'] = "https://".$args['sk_subdomain'].".salesking.eu";
-    $input['sk_username'] = $args['sk_username'];
-    $input['sk_password'] = $args['sk_password'];
-    $rest = new SkRest();
-    $rest->setOptions($input);
-    return $rest;
-  }
-
-  /**
    * Set default values for a new form
    * @param $cf7_sk
    * @return mixed
    */
   private function set_defaults($cf7_sk){
 
-    if ($this->has_credentials($cf7_sk))
+    if (SkRest::has_credentials($cf7_sk))
       return $cf7_sk;
 
     // set the form values as we do have no values found yet
     if (empty($cf7_sk['sk_username'])){
       $cf7_sk['sk_username'] = 'your@SalesKing-login-email.de';
     };
-    if (empty($cf7_sk['sk_subdomain'])){
-      $cf7_sk['sk_subdomain'] = 'SalesKing-Subdomain';
+    if (empty($cf7_sk['sk_url'])){
+      $cf7_sk['sk_url'] = 'https://YOUR-NAME.salesking.eu';
     };
     // form specific settings
     if (empty($cf7_sk['email'])){
@@ -247,15 +225,5 @@ class SkCfAdmin{
     };
     return $cf7_sk;
   }
-
-  /**
-   * determine if we initialize the form first time, all sk fields are empty
-   * @param $cf7_sk
-   * @return bool
-   */
-  private function has_credentials($cf7_sk){
-    return !(empty($cf7_sk['sk_username']) && empty($cf7_sk['sk_password']) && empty($cf7_sk['sk_subdomain']));
-  }
-
 
 }
